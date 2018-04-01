@@ -1,4 +1,4 @@
-package HW2;
+package HW2.Part1;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -13,6 +13,14 @@ import java.util.Set;
 public class PIMContact extends  PIMEntity{
 
     private Set<PersonDetail> set = new HashSet<>();
+
+    public Set<PersonDetail> getSet() {
+        return set;
+    }
+
+    public void setSet(Set<PersonDetail> set) {
+        this.set = set;
+    }
 
     @Override
     public void fromString(String s) {

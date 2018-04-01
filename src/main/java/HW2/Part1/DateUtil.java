@@ -1,4 +1,4 @@
-package HW2;
+package HW2.Part1;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -25,6 +25,11 @@ public class DateUtil {
             System.out.println("日期格式不正确");
         }
         return date;
+    }
+    public static String fromDateToString(Date date)
+    {
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/mm/yyyy");
+        return simpleDateFormat.format(date);
     }
     //验证日期格式
     public static boolean validateDate(String str)
