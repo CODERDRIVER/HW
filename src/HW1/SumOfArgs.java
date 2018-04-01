@@ -13,7 +13,7 @@ public class SumOfArgs {
         int sum = 0;
         for(int i=0;i<args.length;i++)
         {
-            if(args[i].matches("\\d"))
+            if(args[i].matches("\\d*"))
             {
                 sum = sum+Integer.parseInt(args[i]);
             }
