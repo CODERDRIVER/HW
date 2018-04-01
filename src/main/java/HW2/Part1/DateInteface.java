@@ -1,4 +1,4 @@
-package HW2;
+package HW2.Part1;
 
 import java.util.Date;
 

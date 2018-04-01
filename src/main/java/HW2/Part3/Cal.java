@@ -19,9 +19,10 @@ public class Cal {
         int month = Integer.parseInt(args[0]);
         int year = Integer.parseInt(args[1]);
         Date date = null;
-        if(month<=0||year<1900)
+        if(month<=0||year<1900||month>12)
         {
             date = new Date();
+
         }
 
         //每月的天数,默认是平年
@@ -40,9 +41,17 @@ public class Cal {
          */
         Calendar calendar = Calendar.getInstance();
         calendar.set(year,month-1,1,0,0,0);
+
+        if(date!=null)
+        {
+            //说明日期有错
+            calendar.set(date.getYear()+1900,date.getMonth(),date.getDate(),0,0,0);
+        }
         int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
         int dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);
+
         System.out.println("Su\tMo\tTu\tWe\tTh\tFr\tSa");
+        System.out.println(eNameOfMonth[calendar.get(Calendar.MONTH)]+"  "+calendar.get(Calendar.YEAR));
         int j,num=1;
         for(j=0;j<dayOfWeek-1;j++)
         {
