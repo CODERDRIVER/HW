@@ -31,7 +31,7 @@ public class PIMManager{
         while(true)
         {
             String command = scanner.nextLine().toUpperCase();  //为了让输入不区分大小写
-            switch (command){
+            switch (command.trim()){    //去除空格
                 case "LIST":
                     pimManager.list(pimEntities,itemCount);
                     break;
