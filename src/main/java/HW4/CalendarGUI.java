@@ -153,6 +153,34 @@ public class CalendarGUI {
                 }
             }
         });
+
+
+        /**
+         * 给每个button添加点击事件
+         *
+         */
+        for (int i=0;i<calendarGUI.jButtons.length;i++)
+        {
+            calendarGUI.jButtons[i].addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    JFrame jFrame = new JFrame("Item");
+                    jFrame.setVisible(true);
+                    jFrame.setBounds(300,150,400,400);
+                }
+            });
+        }
+        for (int j=0;j<calendarGUI.jButtonsAdapter.length;j++)
+        {
+            calendarGUI.jButtonsAdapter[j].addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    JFrame jFrame = new JFrame("Item");
+                    jFrame.setVisible(true);
+                    jFrame.setBounds(300,150,400,400);
+                }
+            });
+        }
     }
 
     /**
