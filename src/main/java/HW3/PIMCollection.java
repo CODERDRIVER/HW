@@ -14,18 +14,21 @@ import java.util.*;
 public class PIMCollection extends HashSet implements Collection {
 
     private PIMEntity[] pimEntities;
-    public PIMCollection(PIMEntity[] pimEntities)
-    {
-        this.pimEntities = pimEntities;
-    }
 
+    public PIMCollection()
+    {
+
+    }
     public Collection getNotes(){
+
         Set<PIMNote> pimNotes = new HashSet<>();
-        for(int i=0;i<pimEntities.length;i++)
+        Iterator iterator = this.iterator();
+        while(iterator.hasNext())
         {
-            if(pimEntities[i].getClass()== PIMNote.class)
+            Object o = iterator.next();
+            if (o.getClass()==PIMNote.class)
             {
-                pimNotes.add((PIMNote) pimEntities[i]);
+                pimNotes.add((PIMNote) o);
             }
         }
         return pimNotes;
@@ -34,11 +37,13 @@ public class PIMCollection extends HashSet implements Collection {
     public Collection getTodos()
     {
         Set<PIMTodo> pimTodos = new HashSet<>();
-        for(int i=0;i<pimEntities.length;i++)
+        Iterator iterator = this.iterator();
+        while(iterator.hasNext())
         {
-            if(pimEntities[i].getClass()== PIMNote.class)
+            Object o = iterator.next();
+            if (o.getClass()==PIMTodo.class)
             {
-                pimTodos.add((PIMTodo) pimEntities[i]);
+                pimTodos.add((PIMTodo) o);
             }
         }
         return pimTodos;
@@ -47,11 +52,13 @@ public class PIMCollection extends HashSet implements Collection {
 
     public Collection getAppointments(){
         Set<PIMAppointment> pimAppointments = new HashSet<>();
-        for(int i=0;i<pimEntities.length;i++)
+        Iterator iterator = this.iterator();
+        while(iterator.hasNext())
         {
-            if(pimEntities[i].getClass()== PIMNote.class)
+            Object o = iterator.next();
+            if (o.getClass()==PIMAppointment.class)
             {
-                pimAppointments.add((PIMAppointment) pimEntities[i]);
+                pimAppointments.add((PIMAppointment) o);
             }
         }
         return pimAppointments;
@@ -61,11 +68,13 @@ public class PIMCollection extends HashSet implements Collection {
     public Collection getContact()
     {
         Set<PIMContact> pimContacts = new HashSet<>();
-        for(int i=0;i<pimEntities.length;i++)
+        Iterator iterator = this.iterator();
+        while(iterator.hasNext())
         {
-            if(pimEntities[i].getClass()== PIMNote.class)
+            Object o = iterator.next();
+            if (o.getClass()==PIMContact.class)
             {
-                pimContacts.add((PIMContact) pimEntities[i]);
+                pimContacts.add((PIMContact) o);
             }
         }
         return pimContacts;
@@ -74,19 +83,22 @@ public class PIMCollection extends HashSet implements Collection {
     public Collection getItemsForDate(Date d){
 
         Set<PIMEntity> set = new HashSet<>();
-        for(int i=0;i<pimEntities.length;i++)
+        Iterator iterator = this.iterator();
+        while(iterator.hasNext())
         {
-            if(pimEntities[i].getClass()==PIMTodo.class)
+            Object o = iterator.next();
+            //与时间相关的item只有PIMTodo和PIMAppointment两个
+            if (o.getClass()==PIMTodo.class)
             {
-                PIMTodo pimTodo = (PIMTodo)pimEntities[i];
-                if(pimTodo.getDate().equals(d))
+                PIMTodo pimTodo = (PIMTodo)o;
+                if (PIMCollectionUtil.isDateEqual(pimTodo.getDate(),d))
                 {
                     set.add(pimTodo);
                 }
-            }else if(pimEntities[i].getClass()==PIMAppointment.class)
+            }else if (o.getClass()==PIMAppointment.class)
             {
-                PIMAppointment pimAppointment = (PIMAppointment)pimEntities[i];
-                if(pimAppointment.getDate().equals(d))
+                PIMAppointment pimAppointment = (PIMAppointment)o;
+                if (PIMCollectionUtil.isDateEqual(pimAppointment.getDate(),d))
                 {
                     set.add(pimAppointment);
                 }
