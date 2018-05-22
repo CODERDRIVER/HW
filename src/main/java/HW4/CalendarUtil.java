@@ -3,6 +3,7 @@ package HW4;
 import HW2.Part3.Cal;
 
 import java.awt.*;
+import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -374,5 +375,14 @@ public class CalendarUtil {
         }else{
             return false;
         }
+    }
+
+    /**
+     * 将timestamp转成Date类型
+     */
+    @SuppressWarnings("all")
+    public static  Date timeStamp2Date(Timestamp timestamp)
+    {
+        return new Date(timestamp.getYear(),timestamp.getMonth(),timestamp.getDay(),timestamp.getHours(),timestamp.getMinutes(),timestamp.getSeconds());
     }
 }

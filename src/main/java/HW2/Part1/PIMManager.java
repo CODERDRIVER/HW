@@ -1,5 +1,8 @@
 package HW2.Part1;
 
+import HW4.service.PIMTodoService;
+import HW4.service.impl.PIMTodoServiceImpl;
+
 import java.util.*;
 import  java.io.*;
 
@@ -21,11 +24,15 @@ import  java.io.*;
 public class PIMManager{
 
     private static  int itemCount = 0;
+    public static PIMEntity[] pimEntities = new PIMEntity[100];   //初始化一个PIMEntity数组，用来存储Entity
+
+    private static PIMTodoService pimTodoService = new PIMTodoServiceImpl();
+
     public static void main(String[] args) {
         System.out.println("Welcome to PIM.");
         System.out.println("---Enter a command (suported commands are List Create Save Load Quit)---");
 
-        PIMEntity[] pimEntities = new PIMEntity[100];   //初始化一个PIMEntity数组，用来存储Entity
+//        PIMEntity[] pimEntities = new PIMEntity[100];   //初始化一个PIMEntity数组，用来存储Entity
         Scanner scanner = new Scanner(System.in);
         PIMManager pimManager = new PIMManager();
         while(true)
@@ -41,11 +48,11 @@ public class PIMManager{
                     StringBuilder stringBuilder = new StringBuilder();
                     switch (type){
                         case "todo":
-                            System.out.println("Enter date for todo item: (dd/mm/yyyy)");
+                            System.out.println("Enter date for todo item: (MM/dd/yyyy)");
                             String date = scanner.nextLine();
                             while(!DateUtil.validateDate(date))
                             {
-                                System.out.println("Enter date for todo item: (dd/mm/yyyy)");
+                                System.out.println("Enter date for todo item: (MM/dd/yyyy)");
                                 date = scanner.nextLine();
                             }
                             stringBuilder.append(date+";");
@@ -78,7 +85,7 @@ public class PIMManager{
                             pimEntities[itemCount++] = pimContact;
                             break;
                         case "appointment":
-                            System.out.println("Enter date for appointment: (dd/mm/yyyy)");
+                            System.out.println("Enter date for appointment: (MM/dd/yyyy)");
                             stringBuilder.append(scanner.nextLine()+";");
                             System.out.println("Enter appointment discription ");
                             stringBuilder.append(scanner.nextLine()+";");
@@ -99,7 +106,8 @@ public class PIMManager{
                     System.out.println("---Enter a command (suported commands are List Create Save Load Quit)---");
                     break;
                 case "SAVE":
-                    save(pimEntities);
+//                    save(pimEntities);
+                    saveToDB();
                     System.out.println("保存OK");
 
                     /**
@@ -234,13 +242,52 @@ public class PIMManager{
         return ;
     }
 
+    /**
+     * 保存数据到数据库中
+     */
+    public static void saveToDB()
+    {
+        for (int i=0;i<PIMManager.itemCount;i++)
+        {
+            if (pimEntities[i].getClass().equals(PIMTodo.class))
+            {
+                //说明是pimTodo
+                pimTodoService.addPIMTodo((PIMTodo) pimEntities[i]);
+
+            }else if (pimEntities[i].getClass().equals(PIMNote.class))
+            {
+                //说明是pimNote
+
+            }else if (pimEntities[i].getClass().equals(PIMAppointment.class))
+            {
+                //说明是pimAppointment
+
+            }else if (pimEntities[i].getClass().equals(PIMContact.class))
+            {
+                //说明是pimContact
+            }
+        }
+    }
+
     //从文件中加载item
     public static List<List> load()
     {
         List<List> lists= FileUtil.load();
+        pimEntities = new PIMEntity[100];
+        itemCount = 0;
+        List<PIMTodo> pimTodos = lists.get(0);
+        List<PIMNote> pimNotes = lists.get(1);
+        List<PIMAppointment> pimAppointmentList = lists.get(2);
+        List<PIMContact> pimContacts = lists.get(3);
+        pimTodos.forEach(pimTodo -> pimEntities[itemCount++]=pimTodo);
+        pimNotes.forEach(pimNote -> pimEntities[itemCount++] = pimNote);
+        pimAppointmentList.forEach(pimAppointment ->pimEntities[itemCount++] = pimAppointment);
+        pimContacts.forEach(pimContact -> pimEntities[itemCount++]=pimContact);
 
         return lists;
     }
+
+
 
     public static void printList(List list)
     {

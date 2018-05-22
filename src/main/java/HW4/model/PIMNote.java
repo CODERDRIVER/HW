@@ -1,4 +1,4 @@
-package HW2.Part1;
+package HW4.model;
 
 /**
  * @Description Note Item
@@ -7,7 +7,7 @@ package HW2.Part1;
  * @Emailaddress 1187697635@qq.com
  * @Date: 2018/3/25 15:37
  */
-public class PIMNote extends PIMEntity{
+public class PIMNote extends PIMEntity {
 
     private  String note;   //note的内容
 
@@ -28,6 +28,6 @@ public class PIMNote extends PIMEntity{
 
     @Override
     public String toString() {
-        return "Note "+getPriority()+" "+note;
+        return "Note "+getPriority()+" "+note+" "+owner+" "+status;
     }
 }

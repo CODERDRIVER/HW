@@ -1,5 +1,8 @@
 package HW2.Part1;
 
+import org.junit.jupiter.api.Test;
+
+import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -16,7 +19,7 @@ public class DateUtil {
 
     public static Date fromStringToDate(String str)
     {
-        DateFormat dateFormat = new SimpleDateFormat("mm/dd/yyyy");
+        DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
         Date date = null;
         try {
             dateFormat.setLenient(false);
@@ -28,13 +31,13 @@ public class DateUtil {
     }
     public static String fromDateToString(Date date)
     {
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/mm/yyyy");
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MM/dd/yyyy");
         return simpleDateFormat.format(date);
     }
     //验证日期格式
     public static boolean validateDate(String str)
     {
-        DateFormat dateFormat = new SimpleDateFormat("mm/dd/yyyy");
+        DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
         try {
             //设置为不严格
             dateFormat.setLenient(false);
@@ -45,4 +48,17 @@ public class DateUtil {
             return false;
         }
     }
+
+    /**
+     * date转TimeStamp
+     * @param date
+     * @return
+     */
+    public static Timestamp dateToTimeStamp(Date date)
+    {
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+        String string = simpleDateFormat.format(date);
+        return Timestamp.valueOf(string);
+    }
+
 }

@@ -1,15 +1,22 @@
 package HW4;
 
+import HW2.Part1.DateUtil;
+import HW2.Part1.PIMAppointment;
+import HW2.Part1.PIMTodo;
 import HW2.Part3.Cal;
+import HW4.service.impl.EntityServiceImpl;
 import com.sun.org.apache.bcel.internal.generic.FADD;
+import oracle.jvm.hotspot.jfr.JFR;
 import sun.util.resources.cldr.aa.CalendarData_aa_DJ;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.Calendar;
-import java.util.Set;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
+import java.util.*;
+import java.util.List;
 
 /**
  * @Description
@@ -29,6 +36,8 @@ public class CalendarGUI {
 
     private JButton[] jButtons = null;
     private JButton[] jButtonsAdapter = null;
+
+    public EntityServiceImpl entityService = new EntityServiceImpl();
     public static void main(String[] args) {
         CalendarGUI calendarGUI = new CalendarGUI();
         calendar.set(currYear,currMonth-1,1,0,0);
@@ -45,15 +54,94 @@ public class CalendarGUI {
         JButton preButton = new JButton(new ImageIcon(PREURL));
         JButton nextButton = new JButton(new ImageIcon(NEXTURL));
         JTextField jTextField = new JTextField(currYear+"年"+currMonth+"月");
-
-
         jTextField.setHorizontalAlignment(JTextField.CENTER);   //设置文字居中显示
         jTextField.setPreferredSize(new Dimension(100,26));
         jPanel.add(preButton);
         jPanel.add(nextButton);
         jPanel.add(jTextField);
-//        mainFrame.add(jPanel,BorderLayout.NORTH);
-//        mainFrameAdapter.add(jPanel,BorderLayout.NORTH);
+        //添加一个信息管理的按钮
+        String[] items = new String[]{"信息管理","pimTodo","pimNote","pimAppointment","pimContact","new"};
+        JComboBox jComboBox = new JComboBox(items);
+
+//        JButton pimManager = new JButton("信息管理");
+//        jPanel.add(pimManager);
+        jPanel.add(jComboBox);
+
+
+        jComboBox.addItemListener(new ItemListener() {
+            @Override
+            public void itemStateChanged(ItemEvent e) {
+                if (e.getStateChange()== ItemEvent.SELECTED)
+                {
+                    String itemName = (String)e.getItem();
+                    if (itemName.equalsIgnoreCase("信息管理"))
+                    {
+//                        jFrame.setVisible(false);
+                    }
+                    else if (itemName.equalsIgnoreCase("pimTodo"))
+                    {
+                        new PersonalItemManager(itemName).showPimtodo();
+                    }else if (itemName.equalsIgnoreCase("pimNote"))
+                    {
+                        new PersonalItemManager(itemName).showPimNote();
+                    }else if (itemName.equalsIgnoreCase("pimAppointment"))
+                    {
+                        new PersonalItemManager(itemName).showPimAppointment();
+                    }else if(itemName.equalsIgnoreCase("pimContact"))
+                    {
+                        new PersonalItemManager(itemName).showPimContact();
+                    }else if (itemName.equalsIgnoreCase("new"))
+                    {
+                        JFrame jFrame = ItemUtil.createItem();
+                        jFrame.setLayout(new FlowLayout());
+                        JPanel jPanel1 = new JPanel(new BorderLayout());
+                        JLabel jLabel = new JLabel("请输入item的名称:");
+                        JTextField jTextField1 = new JTextField();
+                        jPanel1.add(jLabel,BorderLayout.CENTER);
+                        jPanel1.add(jTextField1,BorderLayout.SOUTH);
+                        JButton jButton = new JButton("点击添加item属性");
+                        jFrame.add(jPanel1);
+                        jFrame.add(jButton);
+
+
+                        /**
+                         * jButton添加监听事件
+                         *
+                         */
+                        jButton.addActionListener(new ActionListener() {
+                            @Override
+                            public void actionPerformed(ActionEvent e) {
+                               String value =  JOptionPane.showInputDialog("请输入属性的个数");
+                                int count = Integer.parseInt(value);
+                                JFrame jFrame1  = new JFrame("属性添加");
+                                jFrame1.setVisible(true);
+                                jFrame1.setBounds(310,310,300,300);
+                                jFrame1.setLayout(new FlowLayout());
+                                for (int i=0;i<count;i++)
+                                {
+                                    JPanel temp = new JPanel(new BorderLayout());
+                                    JLabel jLabel1 = new JLabel("请输入属性"+(i+1)+"的名称");
+                                    JTextField jTextField2 = new JTextField();
+                                    temp.add(jLabel1,BorderLayout.CENTER);
+                                    temp.add(jTextField2,BorderLayout.SOUTH);
+                                    jFrame1.add(temp);
+                                }
+                            }
+                        });
+                    }
+                }
+            }
+        });
+        //添加事件监听按钮
+//        pimManager.addActionListener(new ActionListener() {
+//            @Override
+//            public void actionPerformed(ActionEvent e) {
+//                JFrame jFrame = new JFrame("信息管理");
+//                jFrame.setBounds(300,200,400,400);
+//                jFrame.setVisible(true);
+//                    new PersonalItemManager(jFrame).init();
+//            }
+//        });
         calendarGUI.jButtons = new JButton[35];
         calendarGUI.jButtonsAdapter = new JButton[42];
         JPanel datePanel = calendarGUI.dayNamePanelAdapter(35,calendarGUI.jButtons);
@@ -101,7 +189,7 @@ public class CalendarGUI {
                     calendarGUI.changeButtonText(calendarGUI.jButtonsAdapter,dayOfWeek,days);
                 }else{
                     mainFrameAdapter.setVisible(false);
-                    mainFrameAdapter.setVisible(true);
+                    mainFrame.setVisible(true);
                     mainFrame.add(jPanel,BorderLayout.NORTH);
                     mainFrame.add(datePanel,BorderLayout.CENTER);
                     calendarGUI.changeButtonText(calendarGUI.jButtons,dayOfWeek,days);
@@ -164,9 +252,7 @@ public class CalendarGUI {
             calendarGUI.jButtons[i].addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    JFrame jFrame = new JFrame("Item");
-                    jFrame.setVisible(true);
-                    jFrame.setBounds(300,150,400,400);
+                    calendarGUI.responseJbutton(e,calendarGUI);
                 }
             });
         }
@@ -175,9 +261,7 @@ public class CalendarGUI {
             calendarGUI.jButtonsAdapter[j].addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    JFrame jFrame = new JFrame("Item");
-                    jFrame.setVisible(true);
-                    jFrame.setBounds(300,150,400,400);
+                    calendarGUI.responseJbutton(e,calendarGUI);
                 }
             });
         }
@@ -192,6 +276,19 @@ public class CalendarGUI {
         jFrame.setBounds(100,150,1200,500);
         jFrame.setVisible(true);
         jFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        /**
+         * 测试菜单栏
+         */
+        //        JMenuBar jMenuBar = new JMenuBar();
+//        JMenu jMenu = new JMenu("item");
+//        JMenuItem jMenuItem1,jMenuItem2;
+//        jMenuItem1 = new JMenuItem("todoItem");
+//        jMenuItem2 = new JMenuItem("noteItem");
+//        jMenu.add(jMenuItem1);
+//        jMenu.add(jMenuItem2);
+//        jMenuBar.add(jMenu);
+//        jFrame.setJMenuBar(jMenuBar);
+
     }
 
     /**
@@ -209,6 +306,9 @@ public class CalendarGUI {
                 String month = currMonth>10?(currMonth+1)+"":"0"+(currMonth+1);
                 String d = day>=10?day+"":"0"+day;
                 String solarDate = calendar.get(Calendar.YEAR)+month+d;
+                /**
+                 * 查询数据库，看当天是否有item
+                 */
                 jLabel.setText(currMonth+1+"月"+day+"日"+"\t\t"+CalendarUtil.solarToLunar(solarDate));
                 jLabel.setFont(new Font("Dialog",1,12));
                 jLabel.setForeground(Color.MAGENTA);
@@ -240,7 +340,7 @@ public class CalendarGUI {
     public JPanel dayNamePanelAdapter(int buttonCounts,JButton[] buttons)
     {
         JPanel dayNamePanel = new JPanel();  //内容面板
-        dayNamePanel.setSize(1000,50);
+        dayNamePanel.setSize(1000,300);
         dayNamePanel.setLayout(new BorderLayout(2,2));
         JPanel jPanelUp = new JPanel();
         jPanelUp.setLayout(new GridLayout(1,7,2,2));
@@ -272,6 +372,7 @@ public class CalendarGUI {
                 jLabel.setFont(new Font("Dialog",1,12));
                 jLabel.setForeground(Color.MAGENTA);
                 buttons[i].add(jLabel);
+                Date date = DateUtil.fromStringToDate(month+"/"+d+"/"+calendar.get(Calendar.YEAR));
                 day++;
                 step++;
             }else if (i<dayOfWeek)
@@ -301,6 +402,116 @@ public class CalendarGUI {
         dayNamePanel.setBackground(Color.PINK);
 
         return dayNamePanel;
+    }
+
+    /**
+     * 相应button的点击事件
+     */
+    public void responseJbutton(ActionEvent e,CalendarGUI calendarGUI)
+    {
+        JButton jButton = (JButton) e.getSource();
+        JFrame jFrame = new JFrame("Item");
+        jFrame.setVisible(true);
+        jFrame.setBounds(300,150,400,400);
+        jFrame.setLayout(new BorderLayout());
+        JPanel jPanel1 = new JPanel();
+        JTextArea jTextArea = new JTextArea();
+        jTextArea.setPreferredSize(new Dimension(300,50));
+        jTextArea.append(calendarGUI.addTextToButton(jButton));
+        jPanel1.add(jTextArea);
+        JPanel jPanel2 = new JPanel(new FlowLayout());
+        JButton editButton = new JButton("Edit");
+        JButton addButton = new JButton("Add");
+        jPanel2.add(editButton);
+        jPanel2.add(addButton);
+        jFrame.add(jPanel1,BorderLayout.CENTER);
+        jFrame.add(jPanel2,BorderLayout.SOUTH);
+
+
+        /**
+         * 给addButton添加监听器
+         *
+         */
+        addButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                JFrame jFrame1 = new JFrame();
+                JFrameUtil.initFrame(jFrame1,320,320,300,300);
+                jFrame1.setLayout(new BorderLayout());
+                JPanel jPanel = new JPanel();
+                String items[] = new String[]{"pimtodo","pimAppointment"};
+                JComboBox jComboBox = new JComboBox(items);
+                jPanel.add(jComboBox);
+                JPanel contentJpnal = new JPanel(new BorderLayout());
+                JLabel jLabel = new JLabel("请输出item's content");
+                JTextArea jTextArea1 = new JTextArea(3,10);
+                contentJpnal.add(jLabel,BorderLayout.NORTH);
+                contentJpnal.add(jTextArea1,BorderLayout.CENTER);
+
+                //提交面板
+                JPanel submitJpanel = new JPanel();
+                JButton jButton1 = new JButton("SUBMIT");
+                submitJpanel.add(jButton1);
+                jFrame1.add(jPanel,BorderLayout.NORTH);
+                jFrame1.add(contentJpnal,BorderLayout.CENTER);
+                jFrame1.add(submitJpanel,BorderLayout.SOUTH);
+            }
+        });
+    }
+    /**
+     * 给button弹出的jframe添加文本
+     * @param jButton
+     * @return
+     */
+    public String addTextToButton(JButton jButton) {
+        String string = ((JLabel) jButton.getComponents()[0]).getText();
+        //对数据进行分割，首先根据\t\t分割，得到日期
+        String text = string.split("\t\t")[0];
+        //根据中文进行分割，得到日期的数字
+        String[] strings = text.split("[一-龥]");
+        String month = null;
+        String day = null;
+        if (text==null||text.equals(""))
+        {
+            return "";
+        }
+        if (Integer.parseInt(strings[0]) < 10) {
+            month = 0 + strings[0];
+        }
+        if (Integer.parseInt(strings[1]) < 10) {
+            day = 0 + strings[1];
+        }
+        String date = month + "/" + day + "/" + calendar.get(Calendar.YEAR);
+        List<List> lists = entityService.findEntityByDate(DateUtil.fromStringToDate(date));
+
+        StringBuilder stringBuilder = new StringBuilder();
+        if (lists.size()>=1)
+        {
+            List<Object> objects = lists.get(0);
+            stringBuilder.append(objects.size()!=0?"pimTodo: \n":"");
+            for (Object o : objects) {
+                HW4.model.PIMTodo pimTodo = (HW4.model.PIMTodo) o;
+                stringBuilder.append(pimTodo.toString() + "\n");
+            }
+        }
+       if (lists.size()>=2)
+       {
+           List<Object> objects1= lists.get(1);
+           //说明是哪个item
+           stringBuilder.append(objects1.size()!=0?"pimAppointment:\n":"");
+           for (Object o:objects1)
+           {
+               PIMAppointment pimAppointment = (PIMAppointment)o;
+               stringBuilder.append(pimAppointment.toString()+"\n");
+           }
+       }
+
+        if (stringBuilder.toString().equals(""))
+        {
+            return "There are no items";
+        }else{
+            return stringBuilder.toString();
+        }
     }
 
 }
