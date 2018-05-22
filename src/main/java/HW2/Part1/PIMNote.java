@@ -15,6 +15,18 @@ public class PIMNote extends PIMEntity{
         return note;
     }
 
+    //无参构造
+    public PIMNote()
+    {
+
+    }
+
+    //传值构造
+    public PIMNote(String note)
+    {
+        this.note = note;
+    }
+
     public void setNote(String note) {
         this.note = note;
     }

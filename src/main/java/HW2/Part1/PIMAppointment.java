@@ -15,6 +15,17 @@ public class PIMAppointment  extends  PIMEntity implements DateInteface {
     private String dateString;
     private String discription; //appointment的具体描述
 
+    //空构造
+    public PIMAppointment()
+    {
+
+    }
+    public PIMAppointment(Date date,String discription)
+    {
+        this.date = date;
+        this.discription = discription;
+    }
+
     public Date getDate() {
         return date;
     }

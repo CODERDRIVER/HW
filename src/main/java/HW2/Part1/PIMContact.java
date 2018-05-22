@@ -22,6 +22,17 @@ public class PIMContact extends  PIMEntity{
         this.set = set;
     }
 
+    //空构造
+    public PIMContact()
+    {
+
+    }
+
+    //传值构造
+    public PIMContact(Set<PersonDetail> set)
+    {
+        this.set = set;
+    }
     @Override
     public void fromString(String s) {
         String[] strings = s.split(";");

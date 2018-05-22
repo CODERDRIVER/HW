@@ -17,6 +17,17 @@ public class PIMTodo  extends  PIMEntity implements DateInteface {
 
     private  String todoItem;
 
+
+    public PIMTodo()
+    {
+
+    }
+    public PIMTodo(Date date,String todoItem)
+    {
+        this.date = date;
+        this.todoItem =todoItem;
+    }
+
     public Date getDate() {
         return date;
     }
