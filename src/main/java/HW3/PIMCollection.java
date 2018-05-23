@@ -13,7 +13,6 @@ import java.util.*;
  */
 public class PIMCollection extends HashSet implements Collection {
 
-    private PIMEntity[] pimEntities;
 
     public PIMCollection()
     {
