@@ -6,6 +6,8 @@ import java.awt.*;
 import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.temporal.TemporalField;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -381,8 +383,11 @@ public class CalendarUtil {
      * 将timestamp转成Date类型
      */
     @SuppressWarnings("all")
-    public static  Date timeStamp2Date(Timestamp timestamp)
-    {
-        return new Date(timestamp.getYear(),timestamp.getMonth(),timestamp.getDay(),timestamp.getHours(),timestamp.getMinutes(),timestamp.getSeconds());
+    public static  Date timeStamp2Date(Timestamp timestamp) throws ParseException {
+
+        String string = timestamp.toString();
+        String[] dateString  = string.split(" ");
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        return simpleDateFormat.parse(dateString[0]);
     }
 }

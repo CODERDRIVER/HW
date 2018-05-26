@@ -25,6 +25,7 @@ public class PersonDetail {
         this.emailAddress = emailAddress;
     }
 
+
     public String getFirstName() {
         return firstName;
     }

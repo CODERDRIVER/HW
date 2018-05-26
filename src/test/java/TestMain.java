@@ -7,8 +7,14 @@ import java.sql.ResultSet;
 import HW4.service.impl.EntityServiceImpl;
 import org.junit.Test;
 
+import javax.swing.*;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.List;
+import java.util.TimeZone;
 
 /**
  * @Description
@@ -19,9 +25,6 @@ import java.sql.PreparedStatement;
  */
 public class TestMain {
 
-    public static void main(String[] args) {
-        System.out.println(DateUtil.fromStringToDate("88/23424/43242"));
-    }
 
     @Test
     public void test1()
@@ -33,15 +36,13 @@ public class TestMain {
         PreparedStatement preparedStatement =null;
         ResultSet resultset = null;
         try{
-            String sql = "select * from PIMTODO WHERE ID = ?";
+            String sql = "select date from PIMTODO";
             preparedStatement= connection.prepareStatement(sql);
-            preparedStatement.setInt(1,1);
             resultset =preparedStatement.executeQuery();
             while (resultset.next())
             {
-                System.out.println(resultset.getInt(1));
-                System.out.println(resultset.getTimestamp(2));
-                System.out.println(resultset.getString(3));
+                System.out.println(resultset.getTimestamp(1, Calendar.getInstance(TimeZone.getTimeZone("GMT+8"))));
+//                System.out.println(resultset.getTimestamp(1));
             }
         }catch (Exception e)
         {
@@ -54,6 +55,19 @@ public class TestMain {
     {
         EntityServiceImpl entityServiceImpl = new EntityServiceImpl();
         entityServiceImpl.findAllEntity();
+    }
+
+    @Test
+    public void test3()
+    {
+        EntityServiceImpl entityService = new EntityServiceImpl();
+        List<List> list = entityService.findAllEntity();
+        System.out.println(list.size());
+    }
+
+    public static void main(String[] args) throws ParseException {
+//        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MM/dd/yyyy");
+//        System.out.println(DateUtil.fromStringToDate("/13/1997"));
     }
 
 }

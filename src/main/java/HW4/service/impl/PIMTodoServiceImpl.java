@@ -3,7 +3,7 @@ package HW4.service.impl;
 import DataBase.DBUtils;
 import DataBase.IDUtil;
 import HW2.Part1.DateUtil;
-import HW2.Part1.PIMTodo;
+import HW4.model.PIMTodo;
 import HW4.service.PIMTodoService;
 
 import java.sql.*;
@@ -34,7 +34,7 @@ public class PIMTodoServiceImpl implements PIMTodoService{
             preparedStatement1.setString(2,pimTodo.getTodoItem());
             preparedStatement1.execute();
             preparedStatement3 = connection.prepareStatement(temp);
-            preparedStatement3.setTimestamp(1,DateUtil.dateToTimeStamp(pimTodo.getDate()));
+            preparedStatement3.setTimestamp(1, DateUtil.dateToTimeStamp(pimTodo.getDate()));
             preparedStatement3.setString(2,pimTodo.getTodoItem());
             resultSet = preparedStatement3.executeQuery();
             int id  = 0;

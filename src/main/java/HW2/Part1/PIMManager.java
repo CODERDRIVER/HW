@@ -252,7 +252,7 @@ public class PIMManager{
             if (pimEntities[i].getClass().equals(PIMTodo.class))
             {
                 //说明是pimTodo
-                pimTodoService.addPIMTodo((PIMTodo) pimEntities[i]);
+//                pimTodoService.addPIMTodo((PIMTodo) pimEntities[i]);
 
             }else if (pimEntities[i].getClass().equals(PIMNote.class))
             {

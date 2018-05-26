@@ -19,7 +19,7 @@ public class DateUtil {
 
     public static Date fromStringToDate(String str)
     {
-        DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
+        SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
         Date date = null;
         try {
             dateFormat.setLenient(false);

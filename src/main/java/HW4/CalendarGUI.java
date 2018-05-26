@@ -1,10 +1,10 @@
 package HW4;
 
 import HW2.Part1.DateUtil;
-import HW2.Part1.PIMAppointment;
-import HW2.Part1.PIMTodo;
-import HW2.Part3.Cal;
+import HW4.model.PIMAppointment;
+import HW4.service.PIMTodoService;
 import HW4.service.impl.EntityServiceImpl;
+import HW4.service.impl.PIMTodoServiceImpl;
 import com.sun.org.apache.bcel.internal.generic.FADD;
 import oracle.jvm.hotspot.jfr.JFR;
 import sun.util.resources.cldr.aa.CalendarData_aa_DJ;
@@ -366,11 +366,17 @@ public class CalendarGUI {
         {
             buttons[i] = new JButton();
             if (i>=dayOfWeek-1&&step<=days){
+
                 String month = currMonth>10?currMonth+"":"0"+currMonth;
                 String d = day>10?day+"":"0"+day;
                 JLabel jLabel = new JLabel(currMonth+"月"+day+"日"+"\t\t"+CalendarUtil.solarToLunar(calendar.get(Calendar.YEAR)+month+d));
                 jLabel.setFont(new Font("Dialog",1,12));
-                jLabel.setForeground(Color.MAGENTA);
+                if(currMonth==(new Date().getMonth()+1)&&day==new Date().getDate())
+                {
+                    jLabel.setForeground(Color.red);
+                }else{
+                    jLabel.setForeground(Color.MAGENTA);
+                }
                 buttons[i].add(jLabel);
                 Date date = DateUtil.fromStringToDate(month+"/"+d+"/"+calendar.get(Calendar.YEAR));
                 day++;
@@ -477,11 +483,17 @@ public class CalendarGUI {
         }
         if (Integer.parseInt(strings[0]) < 10) {
             month = 0 + strings[0];
+        }else{
+            month = strings[0];
         }
         if (Integer.parseInt(strings[1]) < 10) {
             day = 0 + strings[1];
+        }else{
+            day = strings[1];
         }
         String date = month + "/" + day + "/" + calendar.get(Calendar.YEAR);
+
+        System.out.println(date);
         List<List> lists = entityService.findEntityByDate(DateUtil.fromStringToDate(date));
 
         StringBuilder stringBuilder = new StringBuilder();

@@ -45,11 +45,13 @@ public class PersonalItemManager {
     //显示所有pimTodo的信息
     public void showPimtodo()
     {
+        //设置布局
+        jframe.setLayout(new BorderLayout());
         if (pimTodos==null||pimTodos.size()==0)
         {
             return ;
         }
-        String[] cols = new String[]{"ID","DATE","ITEM","PRIORITY","OWNER","STATUS"};
+        String[] cols = new String[]{"ID","DATE","ITEM","PRIORITY","OWNER","STATUS","OPTIONS"};
         int size = pimTodos.size();
         String[][] rows= new String[size][cols.length];
         for (int i=0;i<size;i++)
@@ -61,11 +63,18 @@ public class PersonalItemManager {
             rows[i][3] = pimTodo.getPriority()+" ";
             rows[i][4] = pimTodo.getOwer()+" ";
             rows[i][5] = pimTodo.getStatus()+" ";
+            rows[i][6] = "delete";
         }
 
         JTable jTable = new JTable(rows,cols);
         JScrollPane jScrollPane = new JScrollPane(jTable);
-        jframe.add(jScrollPane);
+        jScrollPane.setPreferredSize(new Dimension(800,200));
+        JPanel jPanelDown = new JPanel();
+        JButton jButton = new JButton("add");
+        jPanelDown.add(jButton);
+        ItemUtil.addTodoButtonResponse(jButton);
+        jframe.add(jScrollPane,BorderLayout.NORTH);
+        jframe.add(jPanelDown,BorderLayout.SOUTH);
     }
     //显示所有的pimNote的信息
     public void showPimNote()

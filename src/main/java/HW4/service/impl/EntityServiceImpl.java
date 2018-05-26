@@ -10,9 +10,7 @@ import javax.swing.text.html.parser.Entity;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 /**
  * @Description
@@ -72,7 +70,7 @@ public class EntityServiceImpl implements EntityService {
                        PIMTodo pimTodo = new PIMTodo();
                        pimTodo.setId(resultSet1.getInt(1));
                        pimTodo.setPriority(resultSet.getString(2));
-                       pimTodo.setDate(CalendarUtil.timeStamp2Date(resultSet1.getTimestamp(2)));
+                       pimTodo.setDate(CalendarUtil.timeStamp2Date(resultSet1.getTimestamp(2, Calendar.getInstance(TimeZone.getTimeZone("GMT+8")))));
                        pimTodo.setTodoItem(resultSet1.getString(3));
                        pimTodo.setOwer(resultSet.getString(7));
                        pimTodo.setStatus(resultSet.getInt(8));
@@ -113,7 +111,7 @@ public class EntityServiceImpl implements EntityService {
                        PIMAppointment pimAppointment = new PIMAppointment();
                        pimAppointment.setPriority(resultSet.getString(2));
                        pimAppointment.setId(resultSet1.getInt(1));
-                       pimAppointment.setDate(CalendarUtil.timeStamp2Date(resultSet1.getTimestamp(2)));
+                       pimAppointment.setDate(CalendarUtil.timeStamp2Date(resultSet1.getTimestamp(2,Calendar.getInstance(TimeZone.getTimeZone("GMT+8")))));
                        pimAppointment.setDiscription(resultSet1.getString(3));
                        pimAppointment.setOwer(resultSet.getString(7));
                        pimAppointment.setStatus(resultSet.getInt(8));
@@ -160,6 +158,7 @@ public class EntityServiceImpl implements EntityService {
     }
 
 
+
     @Override
     public List<List> findEntityByDate(Date date) {
         List<List> lists = findAllEntity();
@@ -181,7 +180,7 @@ public class EntityServiceImpl implements EntityService {
                 }
             }
         }
-        if (pimAppointments1!=null)
+        if (pimAppointments!=null)
         {
             pimAppointments1 = new ArrayList<>();
             for (PIMAppointment pimAppointment:pimAppointments)
