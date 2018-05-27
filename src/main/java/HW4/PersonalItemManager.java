@@ -1,7 +1,9 @@
 package HW4;
 
 import HW4.model.*;
+import HW4.service.PIMTodoService;
 import HW4.service.impl.EntityServiceImpl;
+import HW4.service.impl.PIMTodoServiceImpl;
 
 import javax.swing.*;
 import javax.swing.event.TableModelEvent;
@@ -27,6 +29,8 @@ public class PersonalItemManager {
     List<PIMNote> pimNotes = null;
     List<PIMAppointment> pimAppointments = null;
     List<PIMContact> pimContacts = null;
+    //poimtodo service
+    public PIMTodoService pimTodoService = new PIMTodoServiceImpl();
     public PersonalItemManager(String name)
     {
         this.jframe = new JFrame(name);
@@ -90,10 +94,12 @@ public class PersonalItemManager {
                     {
                         //表示要删除该行
                         int row = jTable.getSelectedRow();
-                        String value = jTable.getValueAt(row,0).toString();
+                        //得到选择行的ID，trim()去掉空格
+                        String value = jTable.getValueAt(row,0).toString().trim();
 
                         //从数据库中删除该值
-
+                        pimTodoService.deleteTodoById(Integer.parseInt(value));
+                        JOptionPane.showConfirmDialog(jframe,"删除成功，需要重写打开");
                     }
                 }
 
@@ -106,14 +112,46 @@ public class PersonalItemManager {
             public void tableChanged(TableModelEvent e) {
                 if (e.getType()==TableModelEvent.UPDATE)
                 {
-                    System.out.println(e.getColumn());
-                    System.out.println(e.getLastRow());
-                    String newValue = jTable.getValueAt(e.getLastRow(),e.getColumn()).toString().trim();
-                    if (newValue!=null&&!newValue.equals("")&&!newValue.equals(oldValue[0]))
+                    int column = e.getColumn();
+                    int row = e.getLastRow();
+                    String columnName = jTable.getColumnName(e.getColumn()).trim();
+                    String id = jTable.getValueAt(row,0).toString().trim();
+                    if (columnName.equals("ITEM")) {
+                        String newValue = jTable.getValueAt(e.getLastRow(),e.getColumn()).toString().trim();
+                        if (newValue!=null&&!newValue.equals("")&&!newValue.equals(oldValue[0]))
+                        {
+                            int status = JOptionPane.showConfirmDialog(jframe,"是否更新数据");
+                            if (status==0)
+                            {
+                                pimTodoService.updatePIMTodo(Integer.parseInt(id),newValue);
+                                JOptionPane.showConfirmDialog(jframe,"更新成功");
+                            }
+                        }
+                     }else if (columnName.equals("OWNER")||columnName.equals("PRIORITY")||columnName.equals("STATUS"))
                     {
-                        int status = JOptionPane.showConfirmDialog(jframe,"是否更新数据");
-                        System.out.println(status);
+                        //需要更改PIMEntity 这个表
+                        //首先获得这个值
+                        String owner = jTable.getValueAt(row,4).toString().trim();
+                        String priority = jTable.getValueAt(row,3).toString().trim();
+                        String status = jTable.getValueAt(row,5).toString().trim();
+                        //创建一个pimtodo来包装这些属性
+                        PIMTodo pimTodo = new PIMTodo();
+                        pimTodo.setOwer(owner);
+                        pimTodo.setPriority(priority);
+                        pimTodo.setStatus(Integer.parseInt(status));
+                        //更新数据库
+                        String newValue = jTable.getValueAt(e.getLastRow(),e.getColumn()).toString().trim();
+                        if (newValue!=null&&!newValue.equals("")&&!newValue.equals(oldValue[0]))
+                        {
+                            int  flag = JOptionPane.showConfirmDialog(jframe,"是否更新数据");
+                            if (flag==0)
+                            {
+                                pimTodoService.updatePIMEntityByTodoid(Integer.parseInt(id),pimTodo);
+                                JOptionPane.showConfirmDialog(jframe,"更新成功");
+                            }
+                        }
                     }
+
                 }
             }
         });

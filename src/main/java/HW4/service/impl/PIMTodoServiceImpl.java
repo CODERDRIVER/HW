@@ -95,12 +95,13 @@ public class PIMTodoServiceImpl implements PIMTodoService{
     @Override
     public void updatePIMTodo(int id, String  itenContent) {
         Connection connection = DBUtils.getConnection();
-        String sql = "update PIMTODO SET item = ? ";
+        String sql = "update PIMTODO SET item = ? WHERE ID = ?";
         PreparedStatement preparedStatement = null;
         try{
             //预编译sql
             preparedStatement = connection.prepareStatement(sql);
             preparedStatement.setString(1,itenContent);
+            preparedStatement.setInt(2,id);
             //执行
             preparedStatement.execute();
         }catch (Exception e)
