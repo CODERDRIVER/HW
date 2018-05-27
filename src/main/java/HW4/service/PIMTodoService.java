@@ -14,4 +14,13 @@ public interface PIMTodoService {
 
     //保存一个PIMTodo
     public void addPIMTodo(PIMTodo pimTodo);
+
+    //根据id删除某条记录
+    public boolean deleteTodoById(int id);
+
+    //根据id更新某项记录
+    public void updatePIMTodo(int id,String itemContent);
+
+    //根据todo_ID跟新pimEntity的属性
+    public void updatePIMEntityByTodoid(int todoId,PIMTodo pimTodo);
 }

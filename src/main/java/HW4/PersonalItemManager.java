@@ -4,7 +4,11 @@ import HW4.model.*;
 import HW4.service.impl.EntityServiceImpl;
 
 import javax.swing.*;
+import javax.swing.event.TableModelEvent;
+import javax.swing.event.TableModelListener;
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.List;
 import java.util.Set;
 
@@ -51,7 +55,7 @@ public class PersonalItemManager {
         {
             return ;
         }
-        String[] cols = new String[]{"ID","DATE","ITEM","PRIORITY","OWNER","STATUS","OPTIONS"};
+        String[] cols = new String[]{"ID","DATE","ITEM","PRIORITY","OWNER","STATUS"};
         int size = pimTodos.size();
         String[][] rows= new String[size][cols.length];
         for (int i=0;i<size;i++)
@@ -63,10 +67,56 @@ public class PersonalItemManager {
             rows[i][3] = pimTodo.getPriority()+" ";
             rows[i][4] = pimTodo.getOwer()+" ";
             rows[i][5] = pimTodo.getStatus()+" ";
-            rows[i][6] = "delete";
         }
 
         JTable jTable = new JTable(rows,cols);
+        final String[] oldValue = new String[1];
+        jTable.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+
+                //获得当前编辑单源的旧值
+                oldValue[0] = jTable.getValueAt(jTable.getSelectedRow(),jTable.getSelectedColumn()).toString().trim();
+                System.out.println(oldValue[0]);
+                //判断是否是右键
+                if (e.getButton() == MouseEvent.BUTTON3) {
+                    int status = JOptionPane.showConfirmDialog(jframe,"是否删除该行");
+                    /**
+                     *0--->是
+                     * 1---->否
+                     * 2---->取消
+                     */
+                    if (status==0)
+                    {
+                        //表示要删除该行
+                        int row = jTable.getSelectedRow();
+                        String value = jTable.getValueAt(row,0).toString();
+
+                        //从数据库中删除该值
+
+                    }
+                }
+
+            }
+        });
+        //监听数据的更改数据
+        jTable.getModel().addTableModelListener(new TableModelListener() {
+
+            @Override
+            public void tableChanged(TableModelEvent e) {
+                if (e.getType()==TableModelEvent.UPDATE)
+                {
+                    System.out.println(e.getColumn());
+                    System.out.println(e.getLastRow());
+                    String newValue = jTable.getValueAt(e.getLastRow(),e.getColumn()).toString().trim();
+                    if (newValue!=null&&!newValue.equals("")&&!newValue.equals(oldValue[0]))
+                    {
+                        int status = JOptionPane.showConfirmDialog(jframe,"是否更新数据");
+                        System.out.println(status);
+                    }
+                }
+            }
+        });
         JScrollPane jScrollPane = new JScrollPane(jTable);
         jScrollPane.setPreferredSize(new Dimension(800,200));
         JPanel jPanelDown = new JPanel();
