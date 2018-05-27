@@ -156,13 +156,14 @@ public class PersonalItemManager {
             }
         });
         JScrollPane jScrollPane = new JScrollPane(jTable);
-        jScrollPane.setPreferredSize(new Dimension(800,200));
-        JPanel jPanelDown = new JPanel();
-        JButton jButton = new JButton("add");
-        jPanelDown.add(jButton);
-        ItemUtil.addTodoButtonResponse(jButton);
-        jframe.add(jScrollPane,BorderLayout.NORTH);
-        jframe.add(jPanelDown,BorderLayout.SOUTH);
+//        jScrollPane.setPreferredSize(new Dimension(800,200));
+//        JPanel jPanelDown = new JPanel();
+//        JButton jButton = new JButton("add");
+//        jPanelDown.add(jButton);
+//        ItemUtil.addTodoButtonResponse(jButton);
+//        jframe.add(jScrollPane,BorderLayout.NORTH);
+//        jframe.add(jPanelDown,BorderLayout.SOUTH);
+        addButton(jScrollPane,0);
     }
     //显示所有的pimNote的信息
     public void showPimNote()
@@ -178,12 +179,14 @@ public class PersonalItemManager {
             PIMNote pimNote = pimNotes.get(i);
             rows[i][0] = pimNote.getId()+" ";
             rows[i][1] = pimNote.getNote()+" ";
-            rows[i][2] = pimNote.getOwer()+" ";
-            rows[i][3] = pimNote.getStatus()+" ";
+            rows[i][2] = pimNote.getPriority()+" ";
+            rows[i][3] = pimNote.getOwer()+" ";
+            rows[i][4] = pimNote.getStatus()+" ";
         }
         JTable jTable = new JTable(rows,cols);
         JScrollPane jScrollPane = new JScrollPane(jTable);
-        jframe.add(jScrollPane);
+//        jframe.add(jScrollPane);
+        addButton(jScrollPane,2);
     }
 
     //显示所有的pimAppointment的信息
@@ -207,7 +210,8 @@ public class PersonalItemManager {
         }
         JTable jTable = new JTable(rows,cols);
         JScrollPane jScrollPane = new JScrollPane(jTable);
-        jframe.add(jScrollPane);
+        addButton(jScrollPane,1);
+//        jframe.add(jScrollPane);
     }
     //显示所有的pimAppointment的信息
     public void showPimContact()
@@ -232,6 +236,41 @@ public class PersonalItemManager {
             rows[i][5] = pimContact.getStatus()+" ";
             rows[i][6] = pimContact.getPriority()+" ";
         }
+        JTable jTable = new JTable(rows,cols);
+        JScrollPane jScrollPane = new JScrollPane(jTable);
+        addButton(jScrollPane,3);
+    }
+
+    //添加button 按钮
+
+    /**
+     * flag==0 ===> todo
+     * flag==1 ===> appointment
+     * flag==2 ===> note
+     * flag==3 ===>contact
+     * @param jScrollPane
+     * @param flag
+     */
+    public void addButton(JScrollPane jScrollPane,int flag)
+    {
+        jScrollPane.setPreferredSize(new Dimension(800,200));
+        JPanel jPanelDown = new JPanel();
+        JButton jButton = new JButton("add");
+        jPanelDown.add(jButton);
+        if (flag==0){
+            ItemUtil.addTodoButtonResponse(jButton);
+        }else if (flag==1)
+        {
+            ItemUtil.addAppointmentButtonResponse(jButton);
+        }else if (flag==2)
+        {
+            ItemUtil.addNoteButtonResponse(jButton);
+        }else if (flag==3)
+        {
+            ItemUtil.addContactButtonResponse(jButton);
+        }
+        jframe.add(jScrollPane,BorderLayout.NORTH);
+        jframe.add(jPanelDown,BorderLayout.SOUTH);
     }
 
 
