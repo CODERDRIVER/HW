@@ -422,7 +422,7 @@ public class CalendarGUI {
         jFrame.setLayout(new BorderLayout());
         JPanel jPanel1 = new JPanel();
         JTextArea jTextArea = new JTextArea();
-        jTextArea.setPreferredSize(new Dimension(300,50));
+        jTextArea.setPreferredSize(new Dimension(300,100));
         jTextArea.append(calendarGUI.addTextToButton(jButton));
         jPanel1.add(jTextArea);
         JPanel jPanel2 = new JPanel(new FlowLayout());
@@ -441,26 +441,57 @@ public class CalendarGUI {
         addButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                JFrame jFrame1 = new JFrame();
-                JFrameUtil.initFrame(jFrame1,320,320,300,300);
-                jFrame1.setLayout(new BorderLayout());
-                JPanel jPanel = new JPanel();
-                String items[] = new String[]{"pimtodo","pimAppointment"};
-                JComboBox jComboBox = new JComboBox(items);
-                jPanel.add(jComboBox);
-                JPanel contentJpnal = new JPanel(new BorderLayout());
-                JLabel jLabel = new JLabel("请输出item's content");
-                JTextArea jTextArea1 = new JTextArea(3,10);
-                contentJpnal.add(jLabel,BorderLayout.NORTH);
-                contentJpnal.add(jTextArea1,BorderLayout.CENTER);
-
-                //提交面板
-                JPanel submitJpanel = new JPanel();
-                JButton jButton1 = new JButton("SUBMIT");
-                submitJpanel.add(jButton1);
-                jFrame1.add(jPanel,BorderLayout.NORTH);
-                jFrame1.add(contentJpnal,BorderLayout.CENTER);
-                jFrame1.add(submitJpanel,BorderLayout.SOUTH);
+                String message = JOptionPane.showInputDialog("请选择要添加的类型(PIMTodo Or PIMAppointment)");
+                if (message!=null&&"pimtodo".equalsIgnoreCase(message))
+                {
+                    ItemUtil.repsonseAddButton("PIMTodo");
+                }else if (message!=null&&"pimappointment".equalsIgnoreCase(message)){
+                    ItemUtil.repsonseAddButton("PIMAppointment");
+                }else{
+                    JOptionPane.showConfirmDialog(jFrame,"输入类型不正确");
+                }
+//                JFrame jFrame1 = new JFrame();
+//                JFrameUtil.initFrame(jFrame1,320,500,300,300);
+//                jFrame1.setLayout(new BorderLayout());
+//                JPanel jPanel = new JPanel();
+//                String items[] = new String[]{"pimtodo","pimAppointment"};
+//                JComboBox jComboBox = new JComboBox(items);
+//                jPanel.add(jComboBox);
+//                JPanel contentJpnal = new JPanel(new BorderLayout());
+//                JLabel jLabel = new JLabel("请输出item's content");
+//                JTextArea jTextArea1 = new JTextArea(3,10);
+//                contentJpnal.add(jLabel,BorderLayout.NORTH);
+//                contentJpnal.add(jTextArea1,BorderLayout.CENTER);
+//
+//                //提交面板
+//                JPanel submitJpanel = new JPanel();
+//                JButton jButton1 = new JButton("SUBMIT");
+//                submitJpanel.add(jButton1);
+//                jFrame1.add(jPanel,BorderLayout.NORTH);
+//                jFrame1.add(contentJpnal,BorderLayout.CENTER);
+//                jFrame1.add(submitJpanel,BorderLayout.SOUTH);
+//
+//                //看用户选择的是pimtodo 还是 pimappointment
+//                final int[] status = {0};     //0 表示pimtodo 1表示pimappointment
+//                jComboBox.addItemListener(e1 -> {
+//                    if (!"pimtodo".equals(e1.getItem().toString()))
+//                    {
+//                         status[0] = 1;
+//                    }
+//                });
+//                //提交到数据库中
+//                jButton1.addActionListener(event->{
+//                    int ret = JOptionPane.showConfirmDialog(jFrame,"是否提交");
+//                    if (ret==0)
+//                    {
+//                        //确认提交
+//                        if (status[0]==0)
+//                        {
+//                            //是pimtodo
+//
+//                        }
+//                    }
+//                });
             }
         });
     }
