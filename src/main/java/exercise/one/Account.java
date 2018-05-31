@@ -14,6 +14,19 @@ public class Account {
     //用户的账户余额
     private double balance;
 
+    public Account()
+    {
+
+    }
+    public Account(double balance) {
+        if (balance<0)
+        {
+            throw new AccountException("balance cannot be negative");
+        }else{
+            this.balance = balance;
+        }
+    }
+
     public String getName() {
         return name;
     }

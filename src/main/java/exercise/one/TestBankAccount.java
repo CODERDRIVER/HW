@@ -9,15 +9,16 @@ package exercise.one;
  */
 public class TestBankAccount {
 
-    public static void main(String[] args) {
-        BankAccount bankAccount = new BankAccount();
-        bankAccount.addAccount("lxy",100.0);
-        bankAccount.addAccount("sq",127.0);
-        bankAccount.addAccount("wgn",998.0);
-        bankAccount.addAccount("swr",345.0);
-        System.out.println(BankAccount.getSize());
-        System.out.println(bankAccount.map.size());
-        bankAccount.deposit("lxy",23);
-        System.out.println(bankAccount.map.get("lxy"));
+    public static void main(String[] args)  {
+//        BankAccount bankAccount = new BankAccount();
+//        bankAccount.addAccount("lxy",100.0);
+//        bankAccount.addAccount("sq",127.0);
+//        bankAccount.addAccount("wgn",998.0);
+//        bankAccount.addAccount("swr",345.0);
+//        System.out.println(BankAccount.getSize());
+//        System.out.println(bankAccount.map.size());
+//        bankAccount.deposit("lxy",23);
+//        System.out.println(bankAccount.map.get("lxy"));
+        BankAccount bankAccount = new BankAccount(-1);
     }
 }

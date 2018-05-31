@@ -15,6 +15,15 @@ public class BankAccount extends  Account{
 
     public Map<String,Double> map = new HashMap<>();
 
+    public BankAccount()
+    {
+
+    }
+
+    public BankAccount(double balance)  {
+        super(balance);
+    }
+
     //用来存每个账户所对应的操作记录
     public  Map<String,Queue<String>> transactions = new HashMap<>();
     /**
@@ -43,7 +52,7 @@ public class BankAccount extends  Account{
                 transactions.put(name,queue);
             }
         }else{
-            System.out.println(name+"该用户不存在");
+            throw new AccountException(name+"该用户不存在");
         }
     }
 
@@ -81,14 +90,12 @@ public class BankAccount extends  Account{
                 }
             }else{
                 //账户余额不足
-                System.out.println("账户余额不足");
-                return false;
+                throw new AccountException("账户余额不足");
             }
             return true;
         }else{
             //不存在
-            System.out.println(name+"该用户不存在");
-            return false;
+            throw  new AccountException(name+"该用户不存在");
         }
     }
 
@@ -106,8 +113,7 @@ public class BankAccount extends  Account{
             map.put(newName,b);
             return newName;
         }else{
-            System.out.println("该用户不存在");
-            return "null";
+            throw  new AccountException("该用户不存在");
         }
     }
 
